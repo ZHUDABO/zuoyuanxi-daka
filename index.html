@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>朱媛熙暑假作业打卡</title>
+<style>
+/* ========== CSS 变量 ========== */
+:root {
+  --primary: #4A90D9;
+  --done: #27AE60;
+  --partial: #F39C12;
+  --undone: #BDBDBD;
+  --bg: #FFF8F0;
+  --card: #FFFFFF;
+  --text: #333333;
+  --text-light: #888888;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --radius: 12px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+
+  /* 各科颜色 */
+  --chinese: #E74C3C;
+  --math: #2980B9;
+  --english: #27AE60;
+  --science: #8E44AD;
+  --piano: #E91E63;
+}
+
+/* ========== 基础样式 ========== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* ========== 头部 ========== */
+.header {
+  background: linear-gradient(135deg, var(--primary), #357ABD);
+  color: white;
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.header h1 {
+  font-size: 1.3em;
+  white-space: nowrap;
+}
+
+/* 日期导航 */
+.date-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 25px;
+  padding: 5px 10px;
+}
+
+.date-nav button {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.date-nav button:hover { background: rgba(255,255,255,0.35); }
+.date-nav button:active { transform: scale(0.95); }
+.date-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.date-nav .date-text {
+  font-size: 1em;
+  font-weight: bold;
+  min-width: 130px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* 进度条 */
+.progress-wrap {
+  margin-top: 12px;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85em;
+  margin-bottom: 4px;
+  opacity: 0.9;
+}
+
+.progress-bar {
+  height: 8px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #27AE60, #2ECC71);
+  border-radius: 4px;
+  transition: width 0.5s ease-out;
+}
+
+/* 工具栏 */
+.toolbar {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.toolbar button {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.toolbar button:hover { background: rgba(255,255,255,0.35); }
+.toolbar button:active { transform: scale(0.97); }
+
+/* ========== 主内容区 ========== */
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* 科目卡片网格 */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 640px) {
+  .cards-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 900px) {
+  .cards-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+}
+
+/* ========== 卡片 ========== */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  border-top: 4px solid var(--primary);
+}
+
+.card.chinese  { border-top-color: var(--chinese); }
+.card.math     { border-top-color: var(--math); }
+.card.english  { border-top-color: var(--english); }
+.card.science  { border-top-color: var(--science); }
+.card.piano    { border-top-color: var(--piano); }
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  user-select: none;
+}
+
+.card-header:hover { background: #f5f5f5; }
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  font-size: 1.05em;
+}
+
+.card-title .icon { font-size: 1.3em; }
+
+.card-progress {
+  font-size: 0.85em;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+
+.card-progress strong { color: var(--text); }
+
+.card-body {
+  padding: 8px 0;
+  transition: max-height 0.3s ease;
+}
+
+.card-body.collapsed {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* ========== 任务项 ========== */
+/* 任务分组标签 */
+.task-group-label {
+  font-size: 0.78em;
+  color: var(--text-light);
+  padding: 8px 16px 4px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  gap: 10px;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.task-item:hover { background: #f8f8f8; }
+.task-item:active { background: #f0f0f0; }
+
+/* 状态图标 */
+.task-status {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85em;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.task-status.undone {
+  border: 2px solid var(--undone);
+  color: transparent;
+}
+
+.task-status.done {
+  background: var(--done);
+  border: 2px solid var(--done);
+  color: white;
+}
+
+.task-status.partial {
+  background: var(--partial);
+  border: 2px solid var(--partial);
+  color: white;
+}
+
+/* 任务名称 */
+.task-name {
+  flex: 1;
+  font-size: 0.95em;
+  transition: color 0.2s, text-decoration 0.2s;
+}
+
+.task-name.undone  { color: var(--text-light); }
+.task-name.done    { color: var(--done); text-decoration: line-through; }
+.task-name.partial { color: var(--partial); }
+
+/* 任务要求小字 */
+.task-detail {
+  font-size: 0.75em;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+
+/* 自定义任务 */
+.task-item.custom {
+  border-left: 3px dashed #ccc;
+  margin-left: 4px;
+}
+
+.task-delete {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: #eee;
+  border: none;
+  color: #999;
+  font-size: 0.7em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  line-height: 1;
+}
+
+.task-delete:hover {
+  background: #E74C3C;
+  color: white;
+}
+
+/* 添加自定义按钮 */
+.btn-add-custom {
+  display: block;
+  width: calc(100% - 16px);
+  margin: 6px 8px;
+  padding: 8px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-light);
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.btn-add-custom:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(74,144,217,0.05);
+}
+
+/* ========== 一次性任务区域 ========== */
+.section-title {
+  font-size: 1.15em;
+  font-weight: bold;
+  margin: 20px 0 10px;
+  padding-left: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.onetime-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+@media (min-width: 640px) {
+  .onetime-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .onetime-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.onetime-item {
+  background: var(--card);
+  border-radius: 8px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border-left: 4px solid var(--undone);
+}
+
+.onetime-item:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.12); }
+.onetime-item:active { transform: scale(0.98); }
+
+.onetime-item.done    { border-left-color: var(--done); }
+.onetime-item.partial { border-left-color: var(--partial); }
+
+.onetime-name {
+  flex: 1;
+  font-size: 0.9em;
+}
+
+.onetime-item.done .onetime-name {
+  color: var(--done);
+  text-decoration: line-through;
+}
+
+.onetime-item.partial .onetime-name {
+  color: var(--partial);
+}
+
+.onetime-subject {
+  font-size: 0.7em;
+  color: var(--text-light);
+  background: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+/* ========== 月度总览 ========== */
+.month-section {
+  margin-top: 24px;
+}
+
+.month-toggle {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 0.95em;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.month-toggle:hover { background: #357ABD; }
+
+.month-overview {
+  display: none;
+  margin-top: 12px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+}
+
+.month-overview.show { display: block; }
+
+.month-overview h3 {
+  font-size: 0.95em;
+  margin-bottom: 10px;
+  color: var(--text-light);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  min-width: 280px;
+}
+
+.calendar-header {
+  text-align: center;
+  font-size: 0.75em;
+  color: var(--text-light);
+  padding: 4px;
+  font-weight: bold;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75em;
+  cursor: pointer;
+  transition: transform 0.15s;
+  min-width: 28px;
+  position: relative;
+}
+
+.calendar-day:hover { transform: scale(1.15); z-index: 2; }
+
+.calendar-day.future    { background: #f9f9f9; color: #ccc; }
+.calendar-day.empty     { background: transparent; }
+.calendar-day.no-record { background: #E0E0E0; color: #999; }
+.calendar-day.low       { background: #F5B7B1; color: #922B21; }
+.calendar-day.mid       { background: #FAD7A1; color: #7D6608; }
+.calendar-day.good      { background: #82E0AA; color: #1E8449; }
+.calendar-day.great     { background: #27AE60; color: white; }
+.calendar-day.today     { box-shadow: 0 0 0 3px var(--primary); z-index: 3; }
+
+.legend {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  font-size: 0.75em;
+  color: var(--text-light);
+  align-items: center;
+}
+
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend .dot {
+  width: 12px; height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* ========== 底部 ========== */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0; right: 0;
+  background: var(--card);
+  border-top: 1px solid #eee;
+  padding: 10px 16px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  z-index: 100;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+}
+
+.footer button {
+  padding: 8px 18px;
+  border-radius: 25px;
+  border: 1px solid #ddd;
+  background: white;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.footer button:hover { background: #f0f0f0; }
+.footer button:active { transform: scale(0.97); }
+
+.footer .btn-print {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  font-weight: bold;
+}
+
+.footer .btn-print:hover { background: #357ABD; }
+
+/* ========== 打印样式 ========== */
+@media print {
+  body { background: white; padding-bottom: 0; }
+  .header, .footer, .toolbar, .month-toggle, .month-overview {
+    display: none !important;
+  }
+  .btn-add-custom, .task-delete, .no-print { display: none !important; }
+
+  .cards-grid {
+    display: block;
+  }
+
+  .card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+  }
+
+  .card-body { max-height: none !important; }
+
+  .task-item {
+    padding: 4px 10px;
+  }
+
+  /* === 打印：一次性任务 === */
+  .section-title {
+    display: block !important;
+    font-size: 1em;
+    margin: 18px 0 8px;
+    padding-left: 0;
+  }
+
+  .onetime-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+  }
+
+  .onetime-item {
+    padding: 6px 10px;
+    font-size: 0.8em;
+    border-left-width: 3px;
+  }
+
+  .onetime-name { font-size: 0.85em; }
+  .onetime-subject { display: none; }
+
+  /* 背诵分组标题 */
+  .recite-group-header { font-size: 0.85em !important; }
+  .recite-group-header .no-print { display: none !important; }
+
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  .print-header {
+    display: block !important;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .print-header h2 { font-size: 1.3em; }
+  .print-header p { font-size: 0.9em; color: #666; }
+}
+
+.print-header { display: none; }
+
+/* ========== 隐藏文件输入 ========== */
+#importFile { display: none; }
+
+/* ========== 弹窗 ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+.modal h3 { margin-bottom: 12px; }
+.modal p { color: var(--text-light); margin-bottom: 18px; font-size: 0.9em; line-height: 1.6; }
+.modal button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 25px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.modal button:hover { background: #357ABD; }
+
+/* 隐藏工具类 */
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ==================== 头部 ==================== -->
+<div class="header">
+  <div class="header-top">
+    <h1>🏖️ 朱媛熙暑假作业打卡</h1>
+    <div class="date-nav">
+      <button id="btnPrev" title="前一天">◀</button>
+      <button id="btnPrevWeek" title="前一周">◀◀</button>
+      <span class="date-text" id="dateText">2026年7月19日 周日</span>
+      <button id="btnNextWeek" title="后一周">▶▶</button>
+      <button id="btnNext" title="后一天">▶</button>
+      <button id="btnToday" style="border-radius:15px; width:auto; padding:0 12px; font-size:0.8em;">今天</button>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>📊 暑假总进度</span>
+      <span id="progressText">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+  <div class="toolbar">
+    <button id="btnMonthView">📅 月度总览</button>
+    <button id="btnExport">💾 导出备份</button>
+    <button id="btnImport">📥 导入备份</button>
+    <button id="btnReset" style="background:rgba(231,76,60,0.4);">🔄 重置</button>
+  </div>
+</div>
+
+<!-- ==================== 打印表头 ==================== -->
+<div class="print-header">
+  <h2>朱媛熙暑假作业打卡表</h2>
+  <p id="printDateRange">2026年7月19日 - 8月31日</p>
+  <p id="printStar" style="font-size:1.5em;"></p>
+</div>
+
+<!-- ==================== 主内容 ==================== -->
+<div class="main">
+
+  <!-- 每日任务卡片区 -->
+  <div class="cards-grid" id="cardsGrid"></div>
+
+  <!-- 一次性任务区 -->
+  <h2 class="section-title">📌 一次性 / 项目 / 背诵任务（完成一次即可）<span class="no-print" style="font-size:0.7em;font-weight:normal;color:var(--text-light);"> —— 计分规则：基础80 + (项目+背诵)20 = 满分100（各单项最多15分，交叉互补）</span></h2>
+  <div class="onetime-grid" id="onetimeGrid"></div>
+
+  <!-- 月度总览 -->
+  <div class="month-section">
+    <button class="month-toggle" id="btnMonthToggle">📅 展开月度总览</button>
+    <div class="month-overview" id="monthOverview">
+      <h3>7月 - 8月 完成情况热力图（点击日期可跳转）</h3>
+      <div id="calendarContainer"></div>
+      <div class="legend">
+        图例：
+        <span><span class="dot" style="background:#27AE60"></span> ≥80%</span>
+        <span><span class="dot" style="background:#82E0AA"></span> ≥50%</span>
+        <span><span class="dot" style="background:#FAD7A1"></span> ≥20%</span>
+        <span><span class="dot" style="background:#F5B7B1"></span> &gt;0%</span>
+        <span><span class="dot" style="background:#E0E0E0"></span> 0%</span>
+        <span><span class="dot" style="background:#f9f9f9; border:1px solid #ddd"></span> 未到</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== 底部操作栏 ==================== -->
+<div class="footer">
+  <button class="btn-print" onclick="window.print()">🖨️ 打印打卡表</button>
+  <button onclick="exportData()">💾 导出备份</button>
+  <button onclick="document.getElementById('importFile').click()">📥 导入备份</button>
+</div>
+
+<!-- 隐藏的文件选择器 -->
+<input type="file" id="importFile" accept=".json" onchange="importData(event)">
+
+<!-- ==================== 脚本 ==================== -->
+<script>
+// ========== 数据配置 ==========
+const STORAGE_KEY = 'zyx_summer_homework_2026';
+const START_DATE = '2026-07-19';
+const END_DATE = '2026-08-31';
+
+// 科目配置
+const SUBJECTS = [
+  {
+    id: 'chinese', name: '语文', icon: '📖', cssClass: 'chinese',
+    dailyTasks: [
+      { id: 'calligraphy',  name: '写字打卡',       detail: '每天10分钟，共40页' },
+      { id: 'daily_must_read', name: '每日必读（3选1）', detail: '《爱的教育》《童年》《小英雄雨来》3选1，20页/天' },
+      { id: 'daily_classics',  name: '四大名著（4选1）', detail: '《红楼梦》《西游记》《水浒传》《三国演义》4选1，30页/天' },
+    ],
+    oneTimeTaskIds: [
+      'chinese_essay_tech', 'chinese_essay_movie', 'chinese_essay_creative', 'chinese_annotations',
+      // 课内必背（17项）
+      'recite_kb_01','recite_kb_02','recite_kb_03','recite_kb_04','recite_kb_05',
+      'recite_kb_06','recite_kb_07','recite_kb_08','recite_kb_09','recite_kb_10',
+      'recite_kb_11','recite_kb_12','recite_kb_13','recite_kb_14','recite_kb_15',
+      'recite_kb_16','recite_kb_17',
+      // 课外古诗文（11首）
+      'recite_ew_101','recite_ew_102','recite_ew_103','recite_ew_104','recite_ew_105',
+      'recite_ew_106','recite_ew_107','recite_ew_108','recite_ew_109','recite_ew_110',
+      'recite_ew_111',
+    ]
+  },
+  {
+    id: 'math', name: '数学', icon: '🔢', cssClass: 'math',
+    dailyTasks: [
+      { id: 'dailyPractice', name: '每日二练', detail: 'A4纸练习题，每天2份' },
+      { id: 'dailyBooklet',  name: '每日一测', detail: '每天完成1个小单元测试' },
+    ],
+    oneTimeTaskIds: ['math_stone', 'math_decorate', 'math_bookmark']
+  },
+  {
+    id: 'english', name: '英语', icon: '🌍', cssClass: 'english',
+    dailyTasks: [
+      { id: 'vocab',    name: '单词打卡', detail: '每天背诵50个单词' },
+      { id: 'preview',  name: '课文预习', detail: '每2天完成1个单元' },
+      { id: 'grammar',  name: '语法知识点', detail: '每天掌握1个知识点' },
+      { id: 'dailyRecite', name: '每日背诵', detail: '每天朗读背诵10分钟' },
+    ],
+    oneTimeTaskIds: ['english_video', 'english_diary_1', 'english_diary_2', 'english_diary_3']
+  },
+  {
+    id: 'science', name: '科学', icon: '🔬', cssClass: 'science',
+    dailyTasks: [],  // 科学全是项目式作业，没有每日任务
+    oneTimeTaskIds: ['science_boat', 'science_boat_report', 'science_boat_media', 'science_soap']
+  },
+  {
+    id: 'piano', name: '钢琴8级', icon: '🎹', cssClass: 'piano',
+    dailyTasks: [
+      { id: 'practice', name: '每日练琴', detail: '每天60分钟' },
+    ],
+    oneTimeTaskIds: []
+  }
+];
+
+// 一次性任务完整列表
+const ONE_TIME_TASKS = [
+  { id: 'chinese_essay_tech',     name: '写作① 科技童话',     detail: '450字以上，科技主题童话', subject: 'chinese' },
+  { id: 'chinese_essay_movie',    name: '写作② 电影观后感',   detail: '450字以上，联系生活谈感受', subject: 'chinese' },
+  { id: 'chinese_essay_creative', name: '写作③ 创意想象作文', detail: '450字以上，主题明确细节丰富', subject: 'chinese' },
+  { id: 'chinese_annotations',    name: '阅读批注',           detail: '推荐书目，至少20处批注', subject: 'chinese' },
+  { id: 'math_stone',             name: '石头有多重',         detail: '实践活动：估测+测量，A4纸记录', subject: 'math' },
+  { id: 'math_decorate',          name: '家庭装修',           detail: '选做1项：画平面图/算价格/铺地砖等', subject: 'math' },
+  { id: 'math_bookmark',          name: '数学阅读书签',       detail: '4选1阅读，制作书签', subject: 'math' },
+  { id: 'science_boat',           name: '动力小船模型',       detail: '4人小组，制作能行驶的小船', subject: 'science' },
+  { id: 'science_boat_report',    name: '小船项目报告',       detail: '500字，含设计思路+原理+制作过程', subject: 'science' },
+  { id: 'science_boat_media',     name: '小船照片+视频',      detail: '照片≥5张，演示视频3分钟', subject: 'science' },
+  { id: 'science_soap',           name: '中草药手工皂',       detail: '提取药汁+制作+记录+介绍卡', subject: 'science' },
+  { id: 'english_video',          name: '"发明"短视频',       detail: 'AI制作+配音，介绍伟大发明', subject: 'english' },
+  { id: 'english_diary_1',        name: '英语周记 第1篇',     detail: '15分钟，写在练习本上', subject: 'english' },
+  { id: 'english_diary_2',        name: '英语周记 第2篇',     detail: '15分钟，写在练习本上', subject: 'english' },
+  { id: 'english_diary_3',        name: '英语周记 第3篇',     detail: '15分钟，写在练习本上', subject: 'english' },
+  // ===== 背诵积累：课内必背（17项）=====
+  { id: 'recite_kb_01', name: '《宿建德江》',           detail: '唐·孟浩然',  subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_02', name: '《六月二十七日望湖楼醉书》', detail: '宋·苏轼', subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_03', name: '《西江月·夜行黄沙道中》',  detail: '宋·辛弃疾', subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_04', name: '《江畔独步寻花》',       detail: '唐·杜甫',   subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_05', name: '《七律·长征》',          detail: '毛泽东',     subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_06', name: '日积月累·爱国名言',      detail: '《论语》/曹植/李纲/陆游', subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_07', name: '《观书有感》其二',       detail: '宋·朱熹',   subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_08', name: '《送元二使安西》',       detail: '唐·王维',   subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_09', name: '《浪淘沙》其一',         detail: '唐·刘禹锡', subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_10', name: '《江南春》',             detail: '唐·杜牧',   subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_11', name: '《书湖阴先生壁》',       detail: '宋·王安石', subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_12', name: '《过故人庄》',           detail: '唐·孟浩然', subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_13', name: '《两小儿辩日》',         detail: '文言文',     subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_14', name: '《曹冲称象》',           detail: '文言文',     subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_15', name: '日积月累·五行五谷五音五彩', detail: '文化常识', subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_16', name: '《少年闰土》第1自然段',  detail: '鲁迅',       subject: 'chinese', reciteGroup: '课内必背' },
+  { id: 'recite_kb_17', name: '日积月累·鲁迅名言',      detail: '鲁迅',       subject: 'chinese', reciteGroup: '课内必背' },
+  // ===== 背诵积累：课外古诗文（11首）=====
+  { id: 'recite_ew_101', name: '《观沧海》',               detail: '三国·曹操',   subject: 'chinese', reciteGroup: '课外古诗文' },
+  { id: 'recite_ew_102', name: '《闻王昌龄左迁龙标遥有此寄》', detail: '唐·李白', subject: 'chinese', reciteGroup: '课外古诗文' },
+  { id: 'recite_ew_103', name: '《次北固山下》',           detail: '唐·王湾',     subject: 'chinese', reciteGroup: '课外古诗文' },
+  { id: 'recite_ew_104', name: '《天净沙·秋思》',         detail: '元·马致远',   subject: 'chinese', reciteGroup: '课外古诗文' },
+  { id: 'recite_ew_105', name: '《峨眉山月歌》',           detail: '唐·李白',     subject: 'chinese', reciteGroup: '课外古诗文' },
+  { id: 'recite_ew_106', name: '《江南逢李龟年》',         detail: '唐·杜甫',     subject: 'chinese', reciteGroup: '课外古诗文' },
+  { id: 'recite_ew_107', name: '《行军九日思长安故园》',   detail: '唐·岑参',     subject: 'chinese', reciteGroup: '课外古诗文' },
+  { id: 'recite_ew_108', name: '《夜上受降城闻笛》',       detail: '唐·李益',     subject: 'chinese', reciteGroup: '课外古诗文' },
+  { id: 'recite_ew_109', name: '《秋词》',                 detail: '唐·刘禹锡',   subject: 'chinese', reciteGroup: '课外古诗文' },
+  { id: 'recite_ew_110', name: '《夜雨寄北》',             detail: '唐·李商隐',   subject: 'chinese', reciteGroup: '课外古诗文' },
+  { id: 'recite_ew_111', name: '《潼关》',                 detail: '近代·谭嗣同', subject: 'chinese', reciteGroup: '课外古诗文' },
+];
+
+// ========== 全局状态 ==========
+let currentDate = getTodayStr();
+let appData = null;
+let monthVisible = false;
+
+// ========== 工具函数 ==========
+function getTodayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function formatDateCN(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const weekdays = ['周日','周一','周二','周三','周四','周五','周六'];
+  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 ${weekdays[d.getDay()]}`;
+}
+
+function addDays(dateStr, n) {
+  const d = new Date(dateStr + 'T00:00:00');
+  d.setDate(d.getDate() + n);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function clampDate(dateStr) {
+  if (dateStr < START_DATE) return START_DATE;
+  if (dateStr > END_DATE) return END_DATE;
+  return dateStr;
+}
+
+function getSubjectById(id) {
+  return SUBJECTS.find(s => s.id === id);
+}
+
+function getOneTimeTask(id) {
+  return ONE_TIME_TASKS.find(t => t.id === id);
+}
+
+// ========== 数据管理 ==========
+function initData() {
+  return {
+    version: 3,
+    lastModified: new Date().toISOString(),
+    oneTimeTasks: {},
+    records: {},
+    customTasks: { chinese: [], math: [], english: [], piano: [] }
+  };
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    // 兼容旧版本
+    if (!data.oneTimeTasks) data.oneTimeTasks = {};
+    if (!data.records) data.records = {};
+    if (!data.customTasks) data.customTasks = { chinese: [], math: [], english: [], piano: [] };
+    // 确保四个科目都有数组
+    ['chinese','math','english','piano'].forEach(sid => {
+      if (!data.customTasks[sid]) data.customTasks[sid] = [];
+    });
+
+    // 迁移：给已有 records 补充当前配置中新增的任务 ID（防止改名/新增后缺失）
+    let migrated = false;
+    Object.keys(data.records).forEach(dateStr => {
+      const rec = data.records[dateStr];
+      SUBJECTS.forEach(sub => {
+        if (sub.dailyTasks.length === 0 && (!data.customTasks[sub.id] || data.customTasks[sub.id].length === 0)) return;
+        if (!rec[sub.id]) rec[sub.id] = {};
+        sub.dailyTasks.forEach(t => {
+          if (!(t.id in rec[sub.id])) { rec[sub.id][t.id] = 'undone'; migrated = true; }
+        });
+        (data.customTasks[sub.id] || []).forEach(t => {
+          if (!(t.id in rec[sub.id])) { rec[sub.id][t.id] = 'undone'; migrated = true; }
+        });
+      });
+    });
+    if (migrated) { data.lastModified = new Date().toISOString(); localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+    return data;
+  } catch(e) {
+    return null;
+  }
+}
+
+function saveData() {
+  appData.lastModified = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+}
+
+function getDayRecord(dateStr) {
+  if (!appData.records[dateStr]) {
+    // 创建空白模板
+    const template = {};
+    SUBJECTS.forEach(sub => {
+      if (sub.dailyTasks.length > 0 || (appData.customTasks[sub.id] && appData.customTasks[sub.id].length > 0)) {
+        template[sub.id] = {};
+        sub.dailyTasks.forEach(t => {
+          template[sub.id][t.id] = 'undone';
+        });
+        // 也初始化自定义任务
+        (appData.customTasks[sub.id] || []).forEach(t => {
+          template[sub.id][t.id] = 'undone';
+        });
+      }
+    });
+    appData.records[dateStr] = template;
+  }
+  return appData.records[dateStr];
+}
+
+function setTaskStatus(dateStr, subjectId, taskId, status) {
+  const record = getDayRecord(dateStr);
+  if (!record[subjectId]) record[subjectId] = {};
+  record[subjectId][taskId] = status;
+  saveData();
+}
+
+function setOneTimeTaskStatus(taskId, status) {
+  appData.oneTimeTasks[taskId] = status;
+  saveData();
+}
+
+function getOneTimeTaskStatus(taskId) {
+  return appData.oneTimeTasks[taskId] || 'undone';
+}
+
+// 三态切换
+function toggleStatus(current) {
+  if (current === 'undone') return 'done';
+  if (current === 'done') return 'partial';
+  return 'undone';
+}
+
+function statusIcon(status) {
+  if (status === 'done') return '✓';
+  if (status === 'partial') return '◐';
+  return '○';
+}
+
+// ========== 统计计算 ==========
+function getDayStats(dateStr) {
+  const record = appData.records[dateStr];
+  if (!record) return { total: 0, done: 0, partial: 0, percent: 0 };
+
+  let total = 0, score = 0;
+  SUBJECTS.forEach(sub => {
+    sub.dailyTasks.forEach(t => {
+      total++;
+      const st = (record[sub.id] && record[sub.id][t.id]) || 'undone';
+      if (st === 'done') score += 1;
+      else if (st === 'partial') score += 0.5;
+    });
+    // 也统计自定义任务
+    (appData.customTasks[sub.id] || []).forEach(t => {
+      total++;
+      const st = (record[sub.id] && record[sub.id][t.id]) || 'undone';
+      if (st === 'done') score += 1;
+      else if (st === 'partial') score += 0.5;
+    });
+  });
+  return { total, score, percent: total > 0 ? Math.round(score / total * 100) : 0 };
+}
+
+function getOverallStats() {
+  // === 第一层：基础分（每日任务，80分满分，只看今天） ===
+  const today = getTodayStr();
+  const todayRecord = appData.records[today] || {};
+  let dailyTotal = 0, dailyScore = 0;
+  SUBJECTS.forEach(sub => {
+    sub.dailyTasks.forEach(t => {
+      dailyTotal++;
+      const st = (todayRecord[sub.id] && todayRecord[sub.id][t.id]) || 'undone';
+      if (st === 'done') dailyScore += 1;
+      else if (st === 'partial') dailyScore += 0.5;
+    });
+    (appData.customTasks[sub.id] || []).forEach(t => {
+      dailyTotal++;
+      const st = (todayRecord[sub.id] && todayRecord[sub.id][t.id]) || 'undone';
+      if (st === 'done') dailyScore += 1;
+      else if (st === 'partial') dailyScore += 0.5;
+    });
+  });
+  const dailyMax = 80;
+  const dailyPoints = dailyTotal > 0 ? Math.round(dailyScore / dailyTotal * dailyMax) : 0;
+
+  // === 第二层：一次性/项目任务分（完成1个+10分，封顶15分，不含背诵） ===
+  let projectDone = 0;
+  ONE_TIME_TASKS.forEach(t => {
+    if (t.reciteGroup) return;  // 跳过背诵类
+    const st = appData.oneTimeTasks[t.id] || 'undone';
+    if (st === 'done') projectDone += 1;
+    else if (st === 'partial') projectDone += 0.5;
+  });
+  const projectMax = 15;
+  const projectPoints = Math.min(Math.round(projectDone * 10), projectMax);
+
+  // === 第三层：背诵积累分（课内必背17项 + 课外古诗文11首，共28项，完成1篇+5分，封顶15分） ===
+  let reciteDone = 0;
+  ONE_TIME_TASKS.forEach(t => {
+    if (!t.reciteGroup) return;  // 只看背诵类（含课内+课外）
+    const st = appData.oneTimeTasks[t.id] || 'undone';
+    if (st === 'done') reciteDone += 1;
+    else if (st === 'partial') reciteDone += 0.5;
+  });
+  const reciteMax = 15;
+  const recitePoints = Math.min(Math.round(reciteDone * 5), reciteMax);
+
+  // === 总分：基础80 + (项目+背诵)20 = 满分100（交叉互补，各单项最多15分，合共最多20分） ===
+  const extraMax = 20;
+  const extraPoints = Math.min(projectPoints + recitePoints, extraMax);
+  const totalMax = dailyMax + extraMax;  // 80 + 20 = 100
+  const totalPoints = dailyPoints + extraPoints;
+  const percent = totalMax > 0 ? Math.round(totalPoints / totalMax * 100) : 0;
+
+  // 累计天数统计
+  let daysWithRecord = 0;
+  let d = START_DATE;
+  while (d <= END_DATE) {
+    if (appData.records[d]) daysWithRecord++;
+    d = addDays(d, 1);
+  }
+  const totalDays = Math.floor((new Date(END_DATE + 'T00:00:00') - new Date(START_DATE + 'T00:00:00')) / 86400000) + 1;
+
+  return {
+    percent, totalPoints, totalMax,
+    dailyPoints, dailyMax,
+    projectPoints, projectMax,
+    recitePoints, reciteMax,
+    extraPoints, extraMax,
+    daysWithRecord, totalDays
+  };
+}
+
+// 星级评定（满分100）
+function getStarRating(totalPoints) {
+  if (totalPoints >= 100) return '⭐⭐⭐⭐⭐';
+  if (totalPoints >= 90)  return '⭐⭐⭐⭐';
+  if (totalPoints >= 80)  return '⭐⭐⭐';
+  return '😞';
+}
+
+// ========== UI 渲染 ==========
+function renderAll() {
+  renderDateNav();
+  renderProgress();
+  renderCards();
+  renderOneTimeTasks();
+  renderMonthOverview();
+}
+
+function renderDateNav() {
+  document.getElementById('dateText').textContent = formatDateCN(currentDate);
+  document.getElementById('btnPrev').disabled = currentDate <= START_DATE;
+  document.getElementById('btnPrevWeek').disabled = currentDate <= START_DATE;
+  document.getElementById('btnNext').disabled = currentDate >= END_DATE;
+  document.getElementById('btnNextWeek').disabled = currentDate >= END_DATE;
+  document.getElementById('btnToday').textContent = currentDate === getTodayStr() ? '📍 今天' : '跳回今天';
+  // 同步更新打印表头日期和星级
+  document.getElementById('printDateRange').textContent = '打卡日期：' + formatDateCN(currentDate);
+  const todayStats = getOverallStats();
+  document.getElementById('printStar').textContent = getStarRating(todayStats.totalPoints) + ' ' + todayStats.totalPoints + '/100 分';
+}
+
+function renderProgress() {
+  const stats = getOverallStats();
+  // 三分制显示：基础 + (项目+背诵) + 星级
+  const star = getStarRating(stats.totalPoints);
+  document.getElementById('progressText').textContent =
+    `${star} ${stats.totalPoints}/${stats.totalMax} 分（基础 ${stats.dailyPoints}/${stats.dailyMax} + 项目+背诵 ${stats.extraPoints}/${stats.extraMax}）`;
+  document.getElementById('progressFill').style.width = stats.percent + '%';
+  // 打印表头星级同步
+  document.getElementById('printStar').textContent = star + ' ' + stats.totalPoints + '/100 分';
+  // 进度条颜色
+  const bar = document.getElementById('progressFill');
+  if (stats.percent < 30) bar.style.background = 'linear-gradient(90deg, #E74C3C, #F39C12)';
+  else if (stats.percent < 60) bar.style.background = 'linear-gradient(90deg, #F39C12, #2ECC71)';
+  else bar.style.background = 'linear-gradient(90deg, #27AE60, #2ECC71)';
+}
+
+function renderCards() {
+  const container = document.getElementById('cardsGrid');
+  const dayRecord = getDayRecord(currentDate);
+  const dayStats = getDayStats(currentDate);
+
+  let html = '';
+  SUBJECTS.forEach(sub => {
+    const customList = appData.customTasks[sub.id] || [];
+    // 既无内置任务又无自定义任务则跳过
+    if (sub.dailyTasks.length === 0 && customList.length === 0) return;
+
+    // 计算该科目当日进度（含自定义任务）
+    let subTotal = 0, subScore = 0;
+    sub.dailyTasks.forEach(t => {
+      subTotal++;
+      const st = (dayRecord[sub.id] && dayRecord[sub.id][t.id]) || 'undone';
+      if (st === 'done') subScore += 1;
+      else if (st === 'partial') subScore += 0.5;
+    });
+    customList.forEach(t => {
+      subTotal++;
+      const st = (dayRecord[sub.id] && dayRecord[sub.id][t.id]) || 'undone';
+      if (st === 'done') subScore += 1;
+      else if (st === 'partial') subScore += 0.5;
+    });
+    const subPercent = subTotal > 0 ? Math.round(subScore / subTotal * 100) : 0;
+
+    html += `<div class="card ${sub.cssClass}">`;
+    html += `<div class="card-header" onclick="toggleCard(this)">`;
+    html += `<span class="card-title"><span class="icon">${sub.icon}</span>${sub.name}</span>`;
+    html += `<span class="card-progress">今日 <strong>${subScore}/${subTotal}</strong> (${subPercent}%)</span>`;
+    html += `</div>`;
+    html += `<div class="card-body">`;
+
+    // 每日任务（支持分组标签）
+    let lastGroup = '';
+    sub.dailyTasks.forEach(t => {
+      if (t.group && t.group !== lastGroup) {
+        html += `<div class="task-group-label">📌 ${t.group}</div>`;
+        lastGroup = t.group;
+      }
+      const status = (dayRecord[sub.id] && dayRecord[sub.id][t.id]) || 'undone';
+      html += `<div class="task-item" onclick="toggleDailyTask('${sub.id}','${t.id}')" data-subject="${sub.id}" data-task="${t.id}">`;
+      html += `<span class="task-status ${status}">${statusIcon(status)}</span>`;
+      html += `<span class="task-name ${status}">${t.name}</span>`;
+      html += `<span class="task-detail">${t.detail}</span>`;
+      html += `</div>`;
+    });
+
+    // 自定义任务
+    if (customList.length > 0) {
+      html += `<div class="task-group-label">✏️ 自定义</div>`;
+      customList.forEach(t => {
+        const status = (dayRecord[sub.id] && dayRecord[sub.id][t.id]) || 'undone';
+        html += `<div class="task-item custom" data-subject="${sub.id}" data-task="${t.id}">`;
+        html += `<span class="task-status ${status}" onclick="toggleDailyTask('${sub.id}','${t.id}')" style="cursor:pointer;">${statusIcon(status)}</span>`;
+        html += `<span class="task-name ${status}" onclick="toggleDailyTask('${sub.id}','${t.id}')" style="cursor:pointer;">${t.name}</span>`;
+        html += `<span class="task-detail">${t.detail}</span>`;
+        html += `<button class="task-delete" onclick="event.stopPropagation();removeCustomTask('${sub.id}','${t.id}')" title="删除此自定义项">✕</button>`;
+        html += `</div>`;
+      });
+    }
+
+    // 添加自定义按钮
+    html += `<button class="btn-add-custom" onclick="addCustomTask('${sub.id}')">＋ 添加自定义任务</button>`;
+
+    html += `</div></div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function renderOneTimeTasks() {
+  const container = document.getElementById('onetimeGrid');
+  let html = '';
+  let lastReciteGroup = '';  // 追踪背诵分组
+
+  ONE_TIME_TASKS.forEach(t => {
+    const status = getOneTimeTaskStatus(t.id);
+    const sub = getSubjectById(t.subject);
+
+    // 如果遇到背诵任务且有 reciteGroup，且和上一个不同，插入分组标题
+    if (t.reciteGroup && t.reciteGroup !== lastReciteGroup) {
+      html += `<div class="recite-group-header" style="grid-column:1/-1; margin-top:12px; margin-bottom:2px; font-size:0.92em; font-weight:bold; color:var(--chinese); padding:4px 8px;">
+        📖 ${t.reciteGroup}（${ONE_TIME_TASKS.filter(x => x.reciteGroup === t.reciteGroup).length}项）<span class="no-print" style="font-size:0.75em;color:var(--partial);">→ 计入背诵分</span>
+      </div>`;
+      lastReciteGroup = t.reciteGroup;
+    }
+
+    html += `<div class="onetime-item ${status}" onclick="toggleOneTimeTask('${t.id}')" data-taskid="${t.id}">`;
+    html += `<span class="task-status ${status}" style="width:22px;height:22px;font-size:0.75em;">${statusIcon(status)}</span>`;
+    html += `<div>`;
+    html += `<div class="onetime-name">${t.name}</div>`;
+    html += `<div style="font-size:0.72em;color:var(--text-light);">${t.detail}</div>`;
+    html += `</div>`;
+    html += `<span class="onetime-subject">${sub.icon} ${sub.name}</span>`;
+    html += `</div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function renderMonthOverview() {
+  const container = document.getElementById('calendarContainer');
+  if (!monthVisible) { container.innerHTML = ''; return; }
+
+  const today = getTodayStr();
+
+  let html = '<div class="calendar-grid">';
+  // 表头
+  ['日','一','二','三','四','五','六'].forEach(d => {
+    html += `<div class="calendar-header">${d}</div>`;
+  });
+
+  // 从7月1日开始显示
+  const calStart = '2026-07-01';
+  const calEnd = '2026-08-31';
+  const startD = new Date(calStart + 'T00:00:00');
+  const startDayOfWeek = startD.getDay(); // 0=周日
+
+  // 填充空白
+  for (let i = 0; i < startDayOfWeek; i++) {
+    html += '<div class="calendar-day empty"></div>';
+  }
+
+  let d = calStart;
+  while (d <= calEnd) {
+    const isToday = d === today;
+    const isFuture = d > today;
+    const isBefore = d < START_DATE;
+
+    let cssClass = '';
+    let label = new Date(d + 'T00:00:00').getDate();
+    let title = d;
+
+    if (isBefore) {
+      cssClass = 'empty';
+      label = '';
+    } else if (isFuture) {
+      cssClass = 'future';
+      title += ' (未到)';
+    } else if (!appData.records[d]) {
+      cssClass = 'no-record';
+      title += ' (未打卡)';
+    } else {
+      const stats = getDayStats(d);
+      if (stats.percent >= 80) cssClass = 'great';
+      else if (stats.percent >= 50) cssClass = 'good';
+      else if (stats.percent >= 20) cssClass = 'mid';
+      else if (stats.percent > 0) cssClass = 'low';
+      else cssClass = 'no-record';
+      title += ` (${stats.percent}%)`;
+    }
+
+    if (isToday) cssClass += ' today';
+
+    html += `<div class="calendar-day ${cssClass}" onclick="jumpToDate('${d}')" title="${title}">${label}</div>`;
+    d = addDays(d, 1);
+  }
+
+  html += '</div>';
+
+  // 月份标签
+  html += '<div style="margin-top:8px;font-size:0.8em;color:var(--text-light);text-align:center;">';
+  html += '← 7月 －－－－－－－－－－－－ 8月 →';
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+// ========== 交互处理 ==========
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('collapsed');
+}
+
+function toggleDailyTask(subjectId, taskId) {
+  const record = getDayRecord(currentDate);
+  if (!record[subjectId]) record[subjectId] = {};
+  const current = record[subjectId][taskId] || 'undone';
+  const newStatus = toggleStatus(current);
+  setTaskStatus(currentDate, subjectId, taskId, newStatus);
+
+  // 局部更新
+  updateTaskItemUI(subjectId, taskId, newStatus);
+  updateCardProgress(subjectId);
+  renderProgress();
+  if (monthVisible) renderMonthOverview();
+}
+
+function updateTaskItemUI(subjectId, taskId, newStatus) {
+  const item = document.querySelector(`.task-item[data-subject="${subjectId}"][data-task="${taskId}"]`);
+  if (!item) return;
+  const statusEl = item.querySelector('.task-status');
+  const nameEl = item.querySelector('.task-name');
+  statusEl.className = 'task-status ' + newStatus;
+  statusEl.textContent = statusIcon(newStatus);
+  nameEl.className = 'task-name ' + newStatus;
+}
+
+function updateCardProgress(subjectId) {
+  const sub = getSubjectById(subjectId);
+  if (!sub) return;
+
+  const dayRecord = getDayRecord(currentDate);
+  const customList = appData.customTasks[subjectId] || [];
+  if (sub.dailyTasks.length === 0 && customList.length === 0) return;
+
+  let total = 0, score = 0;
+  sub.dailyTasks.forEach(t => {
+    total++;
+    const st = (dayRecord[sub.id] && dayRecord[sub.id][t.id]) || 'undone';
+    if (st === 'done') score += 1;
+    else if (st === 'partial') score += 0.5;
+  });
+  customList.forEach(t => {
+    total++;
+    const st = (dayRecord[sub.id] && dayRecord[sub.id][t.id]) || 'undone';
+    if (st === 'done') score += 1;
+    else if (st === 'partial') score += 0.5;
+  });
+  const percent = total > 0 ? Math.round(score / total * 100) : 0;
+
+  // 找到对应卡片的进度文字
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    if (card.classList.contains(sub.cssClass)) {
+      const progEl = card.querySelector('.card-progress');
+      if (progEl) {
+        progEl.innerHTML = `今日 <strong>${score}/${total}</strong> (${percent}%)`;
+      }
+    }
+  });
+}
+
+function toggleOneTimeTask(taskId) {
+  const current = getOneTimeTaskStatus(taskId);
+  const newStatus = toggleStatus(current);
+  setOneTimeTaskStatus(taskId, newStatus);
+
+  // 局部更新UI
+  const item = document.querySelector(`.onetime-item[data-taskid="${taskId}"]`);
+  if (item) {
+    item.className = 'onetime-item ' + newStatus;
+    const statusEl = item.querySelector('.task-status');
+    statusEl.className = 'task-status ' + newStatus;
+    statusEl.textContent = statusIcon(newStatus);
+    const nameEl = item.querySelector('.onetime-name');
+    nameEl.style.color = newStatus === 'done' ? 'var(--done)' : (newStatus === 'partial' ? 'var(--partial)' : '');
+    nameEl.style.textDecoration = newStatus === 'done' ? 'line-through' : 'none';
+  }
+
+  // 同步更新顶部进度条
+  renderProgress();
+}
+
+function jumpToDate(dateStr) {
+  currentDate = clampDate(dateStr);
+  renderAll();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ========== 自定义任务管理 ==========
+function addCustomTask(subjectId) {
+  const name = prompt('请输入新任务名称（例如"口算练习"）：');
+  if (!name || !name.trim()) return;
+  const detail = prompt('请输入任务要求（例如"每天20题"，可留空）：') || '';
+  const id = 'custom_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+  appData.customTasks[subjectId].push({ id, name: name.trim(), detail: detail.trim() });
+  saveData();
+  renderCards();  // 重新渲染卡片
+}
+
+function removeCustomTask(subjectId, taskId) {
+  if (!confirm('确定要删除这个自定义任务吗？')) return;
+  appData.customTasks[subjectId] = appData.customTasks[subjectId].filter(t => t.id !== taskId);
+  // 清理所有历史记录中的该任务数据
+  Object.values(appData.records).forEach(rec => {
+    if (rec[subjectId] && rec[subjectId][taskId] !== undefined) {
+      delete rec[subjectId][taskId];
+    }
+  });
+  saveData();
+  renderCards();
+  renderProgress();
+}
+
+// ========== 日期导航 ==========
+document.getElementById('btnPrev').addEventListener('click', () => {
+  currentDate = clampDate(addDays(currentDate, -1));
+  renderAll();
+});
+
+document.getElementById('btnNext').addEventListener('click', () => {
+  currentDate = clampDate(addDays(currentDate, 1));
+  renderAll();
+});
+
+document.getElementById('btnPrevWeek').addEventListener('click', () => {
+  currentDate = clampDate(addDays(currentDate, -7));
+  renderAll();
+});
+
+document.getElementById('btnNextWeek').addEventListener('click', () => {
+  currentDate = clampDate(addDays(currentDate, 7));
+  renderAll();
+});
+
+document.getElementById('btnToday').addEventListener('click', () => {
+  currentDate = getTodayStr();
+  if (currentDate < START_DATE) currentDate = START_DATE;
+  if (currentDate > END_DATE) currentDate = END_DATE;
+  renderAll();
+});
+
+// 键盘左右箭头
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'ArrowLeft') { currentDate = clampDate(addDays(currentDate, -1)); renderAll(); }
+  if (e.key === 'ArrowRight') { currentDate = clampDate(addDays(currentDate, 1)); renderAll(); }
+});
+
+// ========== 月度总览 ==========
+document.getElementById('btnMonthToggle').addEventListener('click', () => {
+  monthVisible = !monthVisible;
+  const overview = document.getElementById('monthOverview');
+  const btn = document.getElementById('btnMonthToggle');
+  if (monthVisible) {
+    overview.classList.add('show');
+    btn.textContent = '📅 收起月度总览';
+    renderMonthOverview();
+  } else {
+    overview.classList.remove('show');
+    btn.textContent = '📅 展开月度总览';
+  }
+});
+
+document.getElementById('btnMonthView').addEventListener('click', () => {
+  monthVisible = !monthVisible;
+  const overview = document.getElementById('monthOverview');
+  const btn = document.getElementById('btnMonthToggle');
+  if (monthVisible) {
+    overview.classList.add('show');
+    btn.textContent = '📅 收起月度总览';
+    renderMonthOverview();
+  } else {
+    overview.classList.remove('show');
+    btn.textContent = '📅 展开月度总览';
+  }
+});
+
+// ========== 数据导出/导入 ==========
+function exportData() {
+  const json = JSON.stringify(appData, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const today = getTodayStr();
+  a.download = `朱媛熙暑假打卡_备份_${today}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  alert('✅ 备份文件已下载！');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.records && !data.oneTimeTasks) {
+        throw new Error('数据格式不正确');
+      }
+
+      if (appData && Object.keys(appData.records).length > 0) {
+        if (!confirm('当前已有打卡数据。\n\n"确定"=覆盖现有数据\n"取消"=放弃导入')) {
+          event.target.value = '';
+          return;
+        }
+      }
+
+      // 合并还是覆盖
+      if (data.version && data.records) {
+        appData = data;
+        saveData();
+        renderAll();
+        alert('✅ 数据导入成功！');
+      } else {
+        throw new Error('数据版本不支持');
+      }
+    } catch(err) {
+      alert('❌ 导入失败：' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ========== 重置 ==========
+document.getElementById('btnReset').addEventListener('click', () => {
+  if (confirm('⚠️ 确定要清除所有打卡数据吗？\n\n此操作不可恢复！\n建议先导出备份。\n\n"确定"=清除所有数据\n"取消"=保留数据')) {
+    if (confirm('再次确认：真的要删除所有数据吗？')) {
+      appData = initData();
+      saveData();
+      currentDate = getTodayStr();
+      renderAll();
+      alert('🔄 数据已重置。');
+    }
+  }
+});
+
+// ========== 自动备份提醒 ==========
+function checkBackupReminder() {
+  if (!appData.lastModified) return;
+  const lastMod = new Date(appData.lastModified);
+  const now = new Date();
+  const daysDiff = Math.floor((now - lastMod) / 86400000);
+  if (daysDiff >= 7) {
+    const lastExport = localStorage.getItem('zyx_last_export_reminder');
+    const lastExportDate = lastExport ? new Date(lastExport) : null;
+    if (!lastExportDate || (now - lastExportDate) / 86400000 >= 7) {
+      if (confirm('💡 提醒：已经超过7天没有备份数据了！\n\n建议现在导出备份，防止数据丢失。\n\n"确定"=立即导出\n"取消"=稍后提醒')) {
+        exportData();
+      }
+      localStorage.setItem('zyx_last_export_reminder', now.toISOString());
+    }
+  }
+}
+
+// ========== 初始化 ==========
+function init() {
+  appData = loadData();
+  if (!appData) {
+    appData = initData();
+    saveData();
+    showWelcome();
+  }
+
+  // 确保当前日期在范围内
+  if (currentDate < START_DATE) currentDate = START_DATE;
+  if (currentDate > END_DATE) currentDate = END_DATE;
+
+  renderAll();
+  checkBackupReminder();
+}
+
+function showWelcome() {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal">
+      <h3>🏖️ 欢迎使用暑假作业打卡！</h3>
+      <p>
+        你好，朱媛熙！👋<br><br>
+        📅 暑假时间：<strong>7月19日 - 8月31日</strong>（44天）<br>
+        📚 5个科目：语文、数学、英语、科学、钢琴8级<br>
+        ✅ 每天打卡，完成一项点一下<br>
+        🖨️ 底部按钮可以打印打卡表<br>
+        💾 记得定期导出备份哦！<br><br>
+        <strong>加油，坚持就是胜利！💪</strong>
+      </p>
+      <button onclick="this.closest('.modal-overlay').remove()">🎯 开始打卡！</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+// 启动！
+init();
+</script>
+
+</body>
+</html>
